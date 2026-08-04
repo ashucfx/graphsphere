@@ -1,0 +1,26 @@
+# Local planning artifacts
+/ARCHITECTURE.md
+/ENGINEERING_DECISIONS.md
+/IMPLEMENTATION_PLAN.md
+/REQUIREMENTS_CHECKLIST.md
+
+# Dependencies and builds
+node_modules/
+dist/
+.turbo/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# Runtime data
+data/
+logs/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS and editor files
+.DS_Store
+Thumbs.db
