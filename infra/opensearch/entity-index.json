@@ -1,0 +1,27 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+      "normalizer": {
+        "lowercase_keyword": {
+          "type": "custom",
+          "filter": ["lowercase", "asciifolding"]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": { "type": "keyword" },
+      "organizationId": { "type": "keyword" },
+      "entityType": { "type": "keyword" },
+      "title": { "type": "text", "fields": { "keyword": { "type": "keyword", "normalizer": "lowercase_keyword" } } },
+      "subtitle": { "type": "text" },
+      "body": { "type": "text" },
+      "tags": { "type": "keyword", "normalizer": "lowercase_keyword" },
+      "status": { "type": "keyword" },
+      "updatedAt": { "type": "date" }
+    }
+  }
+}
