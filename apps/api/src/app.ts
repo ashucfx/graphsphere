@@ -59,9 +59,10 @@ export async function createApp(options: CreateAppOptions) {
   const cache = options.config.REDIS_URL ? new RedisCache(options.config.REDIS_URL) : new MemoryCache();
   const authService = new AuthService(store, options.config);
   
+  const pgSearchService = new SearchService(store);
   const searchService = options.config.OPENSEARCH_URL 
-    ? new OpenSearchService(options.config.OPENSEARCH_URL)
-    : new SearchService(store);
+    ? new OpenSearchService(options.config.OPENSEARCH_URL, pgSearchService)
+    : pgSearchService;
     
   const graphService = options.config.NEO4J_URI 
     ? new Neo4jGraphService(

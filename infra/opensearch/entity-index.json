@@ -3,6 +3,20 @@
     "number_of_shards": 1,
     "number_of_replicas": 0,
     "analysis": {
+      "filter": {
+        "ngram_filter": {
+          "type": "ngram",
+          "min_gram": 3,
+          "max_gram": 4
+        }
+      },
+      "analyzer": {
+        "ngram_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": ["lowercase", "ngram_filter"]
+        }
+      },
       "normalizer": {
         "lowercase_keyword": {
           "type": "custom",
@@ -16,9 +30,9 @@
       "id": { "type": "keyword" },
       "organizationId": { "type": "keyword" },
       "entityType": { "type": "keyword" },
-      "title": { "type": "text", "fields": { "keyword": { "type": "keyword", "normalizer": "lowercase_keyword" } } },
-      "subtitle": { "type": "text" },
-      "body": { "type": "text" },
+      "title": { "type": "text", "analyzer": "ngram_analyzer", "fields": { "keyword": { "type": "keyword", "normalizer": "lowercase_keyword" } } },
+      "subtitle": { "type": "text", "analyzer": "ngram_analyzer" },
+      "body": { "type": "text", "analyzer": "ngram_analyzer" },
       "tags": { "type": "keyword", "normalizer": "lowercase_keyword" },
       "status": { "type": "keyword" },
       "updatedAt": { "type": "date" }

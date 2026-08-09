@@ -1,12 +1,13 @@
 import { Client } from "@opensearch-project/opensearch";
 import type { Paginated, SearchQuery, SearchResult } from "@graphsphere/shared";
 import { searchOperations } from "../observability/metrics.js";
+import type { SearchService } from "./searchService.js";
 
 export class OpenSearchService {
   private readonly client: Client;
   private readonly indexName = "graphsphere_entities";
 
-  public constructor(node: string) {
+  public constructor(node: string, private readonly fallbackService: SearchService) {
     this.client = new Client({ node });
   }
 
@@ -78,8 +79,8 @@ export class OpenSearchService {
       };
     } catch (error) {
       searchOperations.labels("search", "error").inc();
-      // Fallback or throw
-      throw error;
+      console.warn("OpenSearch failed, falling back to PostgreSQL tsvector", error);
+      return this.fallbackService.search(query);
     }
   }
 }

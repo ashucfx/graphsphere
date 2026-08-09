@@ -3,6 +3,7 @@ import type { ExpertGraphQuery, ExpertGraphResult, RelationshipSummary, EntityTy
 import type { CacheClient } from "../cache/cache.js";
 import { notFound } from "../errors.js";
 import { graphOperations } from "../observability/metrics.js";
+import { createHash } from "node:crypto";
 
 export class Neo4jGraphService {
   private readonly driver: Driver;
@@ -21,7 +22,8 @@ export class Neo4jGraphService {
   }
 
   public async findExperts(query: ExpertGraphQuery): Promise<ExpertGraphResult[]> {
-    const key = `neo4j:experts:${JSON.stringify(query)}`;
+    const hash = createHash('sha256').update(JSON.stringify(query)).digest('hex');
+    const key = `cache:graph:expert:${hash}`;
     if (this.cache) {
       const cached = await this.cache.get<ExpertGraphResult[]>(key);
       if (cached) return cached;
@@ -32,7 +34,8 @@ export class Neo4jGraphService {
       const result = await session.readTransaction((tx) => {
         return tx.run(
           `
-          MATCH (e:Employee)-[:WORKED_ON]->(p:Project)<-[:WORKED_ON]-(collaborator:Employee)-[:HAS_SKILL]->(s:Skill)
+          MATCH (e:Employee)-[:WORKED_ON]->(p:Project)
+          MATCH (p)<-[:WORKED_ON]-(collaborator:Employee)-[:HAS_SKILL*1..4]->(s:Skill)
           WHERE toLower(e.title) CONTAINS toLower($role)
             AND toLower(p.domain) CONTAINS toLower($projectDomain)
             AND toLower(s.name) CONTAINS toLower($collaboratorSkill)
@@ -48,7 +51,7 @@ export class Neo4jGraphService {
             organizationId: query.organizationId ?? null
           }
         );
-      });
+      }, { timeout: 2000 });
 
       const experts: ExpertGraphResult[] = result.records.map((record) => {
         const e = record.get("e").properties;
@@ -113,7 +116,7 @@ export class Neo4jGraphService {
 
       graphOperations.labels("findExperts", "ok").inc();
       if (this.cache) {
-        await this.cache.set(key, experts, 60);
+        await this.cache.set(key, experts, 300);
       }
       return experts;
     } catch (error) {
