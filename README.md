@@ -22,6 +22,29 @@ GraphSphere utilizes a microservices-inspired monorepo architecture:
 - **Object Storage**: MinIO (S3 Compatible)
 - **Caching & Queues**: Redis
 
+### System Architecture Flow
+
+```mermaid
+graph TD
+    Client[React SPA] -->|REST / JSON| API(Fastify API Node)
+    
+    subgraph Core Services
+        API -->|Reads / Mutations| PG[(PostgreSQL)]
+        API -->|Cache| RedisCache[(Redis Cache)]
+        API -->|Pathfinding| Neo4j[(Neo4j Graph)]
+        API -->|Fuzzy Search| OpenSearch[(OpenSearch)]
+        API -->|Assets| S3[(MinIO S3)]
+    end
+    
+    subgraph Background Processing
+        PG -.->|Outbox Events| Worker(BullMQ Worker)
+        Worker -->|Queue Job| RedisQueue[(Redis Queue)]
+        Worker -->|Sync Graph| Neo4j
+        Worker -->|Sync Search| OpenSearch
+        Worker -->|Document Extraction| S3
+    end
+```
+
 ## Getting Started
 
 ### Prerequisites
