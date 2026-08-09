@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+import path from "path";
+dotenv.config({ path: path.resolve(process.cwd(), "../../.env") });
 import { loadConfig } from "@graphsphere/api/dist/config.js";
 import { createSeededStore } from "@graphsphere/api/dist/seed/demoData.js";
 import { LocalObjectStorage, S3ObjectStorage } from "@graphsphere/api/dist/storage/objectStorage.js";

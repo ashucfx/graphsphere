@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@graphsphere/api": "0.1.0",
-    "@graphsphere/shared": "0.1.0"
+    "@graphsphere/shared": "0.1.0",
+    "dotenv": "^17.4.2"
   }
 }

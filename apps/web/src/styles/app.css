@@ -138,11 +138,17 @@ nav button.active {
 
 .subtle {
   margin-top: auto;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 6px;
 }
 .subtle:hover {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
+  color: var(--text-primary);
+  background: var(--bg-glass);
 }
 
 .primary {
@@ -219,7 +225,7 @@ nav button.active {
 }
 
 .table-panel {
-  overflow: hidden;
+  overflow-x: auto;
 }
 
 .table-header, .table-row {
@@ -518,9 +524,4 @@ textarea {
 @media (max-width: 680px) {
   .workspace { padding: 20px; }
   .topbar { align-items: flex-start; flex-direction: column; }
-  .table-row.three, .table-header.cols-3, .table-row.four, .table-header.cols-4 {
-    grid-template-columns: 1fr;
-    align-items: start;
-    padding: 16px 20px;
-  }
 }
