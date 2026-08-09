@@ -399,36 +399,119 @@ textarea {
   border-radius: 12px;
 }
 
+.relationship-map-wrapper {
+  width: 100%;
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: inset 0 0 32px rgba(0, 0, 0, 0.3), 0 8px 32px rgba(0, 0, 0, 0.25);
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05), transparent 70%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 20px 20px, 20px 20px;
+}
+
 .relationship-map {
   width: 100%;
-  height: 300px;
-  min-height: 300px;
-  background: #0f141c;
-  border: 1px solid var(--border-light);
-  border-radius: 12px;
-  overflow: hidden;
+  height: auto;
+  max-height: 280px;
+  display: block;
+  overflow: visible;
 }
 
-/* Graph SVG Elements */
-.node {
-  stroke-width: 2;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+/* Node Animations & Styling */
+.graph-node-group {
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.node-0 { fill: #1e3a8a; stroke: #3b82f6; } /* Employee */
-.node-1 { fill: #4c1d95; stroke: #8b5cf6; } /* Project */
-.node-2 { fill: #064e3b; stroke: #10b981; } /* Skill */
-.node-3 { fill: #7f1d1d; stroke: #ef4444; } /* Document */
+.graph-node-group:hover {
+  transform: translateY(-4px) scale(1.05);
+}
 
-.node-label, .node-type, .edge-label {
+.node-main-circle {
+  transition: filter 0.3s ease, stroke-width 0.3s ease;
+}
+
+.graph-node-group:hover .node-main-circle {
+  stroke-width: 4px;
+  filter: drop-shadow(0 0 16px rgba(59, 130, 246, 0.8));
+}
+
+.node-pulse-ring {
+  animation: node-pulse 3s infinite ease-in-out;
+  transform-origin: center;
+}
+
+@keyframes node-pulse {
+  0% { transform: scale(0.95); opacity: 0.2; }
+  50% { transform: scale(1.15); opacity: 0.6; }
+  100% { transform: scale(0.95); opacity: 0.2; }
+}
+
+.node-index-text {
   text-anchor: middle;
-  font-size: 12px;
-  fill: #f1f5f9;
+  font-size: 14px;
+  font-weight: 800;
+  fill: #ffffff;
+  pointer-events: none;
 }
 
-.node-label { font-weight: 700; fill: #ffffff; }
-.node-type, .edge-label { fill: #94a3b8; font-size: 11px; }
-.edge-label { background: rgba(0,0,0,0.5); }
+.node-label-bg {
+  fill: rgba(10, 14, 20, 0.85);
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-Width: 1px;
+}
+
+.node-label-text {
+  text-anchor: middle;
+  font-size: 11px;
+  font-weight: 600;
+  fill: #f8fafc;
+  pointer-events: none;
+}
+
+.node-sub-role {
+  text-anchor: middle;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+}
+
+/* Edge & Flow Animations */
+.edge-line-glow {
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.4));
+}
+
+.edge-line-animated {
+  animation: dash-flow 25s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes dash-flow {
+  from { stroke-dashoffset: 200; }
+  to { stroke-dashoffset: 0; }
+}
+
+.edge-badge-bg {
+  fill: rgba(15, 23, 42, 0.9);
+  stroke: rgba(59, 130, 246, 0.3);
+  stroke-width: 1px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+
+.edge-badge-text {
+  text-anchor: middle;
+  font-size: 10px;
+  font-weight: 700;
+  fill: #93c5fd;
+  letter-spacing: 0.05em;
+}
 
 .graph-workspace {
   display: grid;
